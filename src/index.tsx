@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import Backchannel from './backend';
+
+let backchannel = Backchannel()
 
 declare global {
   interface Window {
