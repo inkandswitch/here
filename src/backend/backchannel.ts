@@ -74,7 +74,7 @@ export class Backchannel extends events.EventEmitter {
   private _client: Client;
   private _open: boolean;
   private _blobs: Blobs;
-  private log: debug;
+  private log: debug.Debugger;
   private relay: string;
 
   /**

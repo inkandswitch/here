@@ -41,7 +41,7 @@ export class Database<T> extends EventEmitter {
     DocumentId,
     Automerge.Doc<unknown>
   >();
-  private log: debug;
+  private log: debug.Debugger;
   private dbname: string;
   private _opened: boolean;
   private _opening: boolean = false;

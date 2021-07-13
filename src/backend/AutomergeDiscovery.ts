@@ -25,7 +25,7 @@ export default class AutomergeDiscovery extends EventEmitter {
   public doc: BackendState;
   public docId: string;
   private _peers: Map<PeerId, Peer>;
-  private log: debug;
+  private log: debug.Debugger;
 
   constructor(docId: string, backend?: BackendState) {
     super();
