@@ -80,8 +80,8 @@ export class Database<T> extends EventEmitter {
     await this.change(CONTACT_LIST, changeFn);
   }
 
-  get all() {
-    return Array.from(this.root.contacts).concat(this.devices);
+  get all(): IContact[] {
+    return Array.from(this.root.contacts).concat(this.devices) as IContact[];
   }
 
   set root(doc: Automerge.Doc<ContactList>) {
@@ -259,6 +259,7 @@ export class Database<T> extends EventEmitter {
     let contact: IContact = {
       id,
       key,
+      metadata: {},
       device: 0,
       moniker,
       discoveryKey,
@@ -293,7 +294,7 @@ export class Database<T> extends EventEmitter {
       let c = 0;
       this.log('loading contacts+devices', this.all);
       let tasks = [];
-      this.all.forEach(async (contact) => {
+      this.all.forEach(async (contact: IContact) => {
         c++;
         let docId = contact.discoveryKey;
         this.log('loading', docId);
@@ -347,6 +348,15 @@ export class Database<T> extends EventEmitter {
       if (!contacts.length)
         this.error(new Error('Could not find contact with id=' + id));
       contacts[0].avatar = avatar;
+    });
+  }
+
+  updateContact(id: ContactId, metadata: Object): Promise<void> {
+    return this.change(CONTACT_LIST, (doc: ContactList) => {
+      let contacts = doc.contacts.filter((c) => c.id === id);
+      if (!contacts.length)
+        this.error(new Error('Could not find contact with id=' + id));
+      contacts[0].metadata = metadata;
     });
   }
 

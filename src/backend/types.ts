@@ -22,6 +22,7 @@ export interface IContact {
   key: Key; // -> shared secret key I've accepted with them
   isConnected?: boolean;
   device: number;
+  metadata: Object; // custom app-specific metadata about this contact
 }
 
 export interface IDevice extends IContact {
