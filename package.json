@@ -22,6 +22,7 @@
     "debug": "^4.3.2",
     "dexie": "^3.0.3",
     "framer-motion": "^4",
+    "mapbox-gl": "^2.3.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
@@ -56,9 +57,9 @@
     "node": "16.4.2"
   },
   "devDependencies": {
-    "@types/create-hash": "^1.2.2",
     "@localfirst/relay": "^3.2.0",
-    "cross-env": "^7.0.3",
-    "@types/debug": "^4.1.6"
+    "@types/create-hash": "^1.2.2",
+    "@types/debug": "^4.1.6",
+    "cross-env": "^7.0.3"
   }
 }
