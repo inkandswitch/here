@@ -60,6 +60,11 @@ export default function CreateInviteButton() {
     }
   }, [code, redeemGeneratedCode]);
 
+  const closeModal = () => {
+    setContactId('');
+    onClose();
+  };
+
   return (
     <>
       <Button variant="outline" onClick={onOpen}>
@@ -69,7 +74,7 @@ export default function CreateInviteButton() {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         {contactId ? (
-          <ContactModalContent contactId={contactId} closeModal={onClose} />
+          <ContactModalContent contactId={contactId} closeModal={closeModal} />
         ) : (
           <ModalContent>
             <ModalHeader>Temporary invite code</ModalHeader>

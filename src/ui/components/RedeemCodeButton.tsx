@@ -40,6 +40,7 @@ export default function RedeemCodeButton() {
 
       const cid: ContactId = await backchannel.addContact(key);
       setErrorMsg('');
+      setCode('');
       setContactId(cid);
     } catch (err) {
       console.log('got error', err);
@@ -58,6 +59,11 @@ export default function RedeemCodeButton() {
     await redeemCode(code);
   }
 
+  const closeModal = () => {
+    setContactId('');
+    onClose();
+  };
+
   return (
     <>
       <Button variant="outline" onClick={onOpen}>
@@ -66,7 +72,7 @@ export default function RedeemCodeButton() {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         {contactId ? (
-          <ContactModalContent contactId={contactId} closeModal={onClose} />
+          <ContactModalContent contactId={contactId} closeModal={closeModal} />
         ) : (
           <ModalContent>
             <ModalHeader>Temporary invite code</ModalHeader>
