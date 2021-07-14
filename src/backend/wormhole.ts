@@ -37,7 +37,7 @@ function binaryToByte(bin) {
 
 export class Wormhole {
   client: Client;
-  log: debug;
+  log: debug.Debugger;
 
   constructor(client) {
     this.client = client;
@@ -120,10 +120,11 @@ export class Wormhole {
                 inbound
               );
               key = Buffer.from(array).toString('hex');
-              let encryptedMessage: EncryptedProtocolMessage = await symmetric.encrypt(
-                key,
-                JSON.stringify({ version: VERSION })
-              );
+              let encryptedMessage: EncryptedProtocolMessage =
+                await symmetric.encrypt(
+                  key,
+                  JSON.stringify({ version: VERSION })
+                );
               socket.send(serialize(encryptedMessage));
             } else {
               let decoded = deserialize(msg) as EncryptedProtocolMessage;
