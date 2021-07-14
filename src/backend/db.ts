@@ -241,6 +241,7 @@ export class Database<T> extends EventEmitter {
       id,
       device: 1,
       key,
+      metadata: {},
       discoveryKey,
     };
     this.log('addDevice', key);
