@@ -1,11 +1,65 @@
 /** @jsxImportSource @emotion/react */
 import React, { useEffect, useState } from 'react';
-import { ChakraProvider, Button, Stack } from '@chakra-ui/react';
+import {
+  ChakraProvider,
+  extendTheme,
+  withDefaultColorScheme,
+  Stack,
+} from '@chakra-ui/react';
+
+import Backchannel, { EVENTS } from '../backend';
+import { IMessage } from '../backend/types';
+import Automerge from 'automerge';
+import { Mailbox } from '../backend/backchannel';
+
 import PeopleDrawer from './components/PeopleDrawer';
 import Map from './components/Map';
+import CreateInviteButton from './components/CreateInviteButton';
+import RedeemCodeButton from './components/RedeemCodeButton';
+
+const backchannel = Backchannel();
 
 function App() {
   const [askedLocation, setAskedLocation] = useState(false);
+  const [contacts, setContacts] = useState([]);
+  const [latestMessages, setLatestMessages] = useState([]);
+
+  useEffect(() => {
+    function refreshContactList() {
+      const contacts = backchannel.listContacts();
+      setContacts(contacts);
+
+      contacts.forEach(async (contact) => {
+        let messages = backchannel.getMessagesByContactId(contact.id);
+
+        if (!messages) {
+          const doc = (await backchannel._addContactDocument(
+            contact
+          )) as Automerge.Doc<Mailbox>;
+          messages = doc.messages;
+        }
+        const lastMessage: IMessage = messages[messages.length - 1];
+        setLatestMessages((latestMessages) => ({
+          ...latestMessages,
+          [contact.id]: lastMessage,
+        }));
+      });
+    }
+
+    refreshContactList();
+
+    backchannel.on(EVENTS.CONTACT_DISCONNECTED, refreshContactList);
+    backchannel.on(EVENTS.CONTACT_CONNECTED, refreshContactList);
+    backchannel.on(EVENTS.MESSAGE, refreshContactList);
+    return function unsub() {
+      backchannel.removeListener(
+        EVENTS.CONTACT_DISCONNECTED,
+        refreshContactList
+      );
+      backchannel.removeListener(EVENTS.CONTACT_CONNECTED, refreshContactList);
+      backchannel.removeListener(EVENTS.MESSAGE, refreshContactList);
+    };
+  }, []);
 
   function success(pos) {
     var crd = pos.coords;
@@ -35,13 +89,15 @@ function App() {
     }
   }, [askedLocation, setAskedLocation]);
 
+  const theme = extendTheme(withDefaultColorScheme({ colorScheme: 'purple' }));
+
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <Map />
       <Stack spacing={4} direction="row" align="center">
-        <Button>Share Location</Button>
-        <Button>Redeem code</Button>
-        <PeopleDrawer />
+        <CreateInviteButton />
+        <RedeemCodeButton />
+        <PeopleDrawer contacts={contacts} latestMessages={latestMessages} />
       </Stack>
     </ChakraProvider>
   );

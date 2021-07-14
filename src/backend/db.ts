@@ -113,6 +113,7 @@ export class Database<T> extends EventEmitter {
   }
 
   getContacts(): IContact[] {
+    if (!this.root) return [];
     if (!this.root.contacts) return [];
     return this.root.contacts.map((c) => this._hydrateContact(c));
   }
