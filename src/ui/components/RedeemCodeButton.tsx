@@ -17,12 +17,14 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import Backchannel from '../../backend';
+import ContactModalContent from './ContactModalContent';
 
 const backchannel = Backchannel();
 
 export default function RedeemCodeButton() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [code, setCode] = useState('');
+  const [contactId, setContactId] = useState('');
 
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -38,9 +40,7 @@ export default function RedeemCodeButton() {
 
       const cid: ContactId = await backchannel.addContact(key);
       setErrorMsg('');
-      console.log('we did it! we found a person.', cid);
-
-      // TODO exit from modal and show contact on map??
+      setContactId(cid);
     } catch (err) {
       console.log('got error', err);
       onError(err);
@@ -65,35 +65,39 @@ export default function RedeemCodeButton() {
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Temporary invite code</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Text mb="8px">
-              Enter your friend's temporary invite code to link with them:
-            </Text>
-            <FormControl id="code-input">
-              <Input
-                value={code}
-                placeholder="Enter the code"
-                onChange={handleInputChange}
-                autoFocus
-              />
-            </FormControl>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              type="submit"
-              form="code-input"
-              variant="solid"
-              isDisabled={code.length === 0}
-              onClick={handleSubmit}
-            >
-              Submit
-            </Button>
-            <Text color="tomato">{errorMsg}</Text>
-          </ModalFooter>
-        </ModalContent>
+        {contactId ? (
+          <ContactModalContent contactId={contactId} closeModal={onClose} />
+        ) : (
+          <ModalContent>
+            <ModalHeader>Temporary invite code</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Text mb="8px">
+                Enter your friend's temporary invite code to link with them:
+              </Text>
+              <FormControl id="code-input">
+                <Input
+                  value={code}
+                  placeholder="Enter the code"
+                  onChange={handleInputChange}
+                  autoFocus
+                />
+              </FormControl>
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                type="submit"
+                form="code-input"
+                variant="solid"
+                isDisabled={code.length === 0}
+                onClick={handleSubmit}
+              >
+                Submit
+              </Button>
+              <Text color="tomato">{errorMsg}</Text>
+            </ModalFooter>
+          </ModalContent>
+        )}
       </Modal>
     </>
   );

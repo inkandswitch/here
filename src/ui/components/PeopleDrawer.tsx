@@ -15,6 +15,10 @@ import {
   Box,
 } from '@chakra-ui/react';
 import { IContact } from '../../backend/types';
+import Backchannel from '../../backend';
+import Nickname from './Nickname';
+
+const backchannel = Backchannel();
 
 type Props = {
   contacts: Array<IContact>;
@@ -24,6 +28,20 @@ type Props = {
 export default function PeopleDrawer({ contacts, latestMessages }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
+
+  function handleResetClick(e) {
+    e.preventDefault();
+    if (
+      window.confirm(
+        'Remove all of your data and contacts? you will have to find your people again.'
+      )
+    ) {
+      backchannel.destroy().catch((err) => {
+        console.error('error clearing db', err);
+      });
+      window.location.href = '';
+    }
+  }
 
   return (
     <>
@@ -42,7 +60,7 @@ export default function PeopleDrawer({ contacts, latestMessages }: Props) {
           <DrawerHeader>Here.</DrawerHeader>
           <DrawerBody>
             <Box>
-              {contacts.length === 0 && 'NO CONTACTS'}
+              {contacts.length === 0 && 'No contacts. Where are your peeps at?'}
               <UnorderedList>
                 {contacts.map((contact) => {
                   let latestMessage, latestMessageTime;
@@ -56,7 +74,7 @@ export default function PeopleDrawer({ contacts, latestMessages }: Props) {
                   return (
                     <Link key={contact.id}>
                       <ListItem>
-                        {contact.id} - {latestMessageTime} TODO
+                        <Nickname contact={contact} /> {latestMessageTime}
                       </ListItem>
                     </Link>
                   );
@@ -65,8 +83,12 @@ export default function PeopleDrawer({ contacts, latestMessages }: Props) {
             </Box>
           </DrawerBody>
           <DrawerFooter>
-            <Button variant="outline" mr={3} onClick={onClose}>
-              Close
+            <Button
+              variant="outline"
+              colorScheme="red"
+              onClick={handleResetClick}
+            >
+              Delete all data
             </Button>
           </DrawerFooter>
         </DrawerContent>

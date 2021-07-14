@@ -14,6 +14,7 @@ import {
   ModalContent,
   useDisclosure,
 } from '@chakra-ui/react';
+import ContactModalContent from './ContactModalContent';
 
 const backchannel = Backchannel();
 
@@ -23,6 +24,7 @@ const CODE_REGENERATE_TIMER_SEC = 120;
 export default function CreateInviteButton() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const code = useCode(CodeType.NUMBERS, CODE_REGENERATE_TIMER_SEC);
+  const [contactId, setContactId] = useState('');
 
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -40,9 +42,7 @@ export default function CreateInviteButton() {
       );
 
       const cid: ContactId = await backchannel.addContact(key);
-      console.log('we found a person!', cid);
-
-      // TODO close the modal or go back to main page
+      setContactId(cid);
       setErrorMsg('');
     } catch (err) {
       if (err.message.startsWith('This code has expired')) {
@@ -68,17 +68,21 @@ export default function CreateInviteButton() {
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Temporary invite code</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Text>
-              Your friend should redeem this code to link you as a contact:
-            </Text>
-            <Text fontSize="4xl">{code}</Text>
-            <Text color="tomato">{errorMsg}</Text>
-          </ModalBody>
-        </ModalContent>
+        {contactId ? (
+          <ContactModalContent contactId={contactId} closeModal={onClose} />
+        ) : (
+          <ModalContent>
+            <ModalHeader>Temporary invite code</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Text>
+                Your friend should redeem this code to link you as a contact:
+              </Text>
+              <Text fontSize="4xl">{code}</Text>
+              <Text color="tomato">{errorMsg}</Text>
+            </ModalBody>
+          </ModalContent>
+        )}
       </Modal>
     </>
   );
