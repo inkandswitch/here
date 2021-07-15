@@ -48,7 +48,7 @@ export default function Map() {
       <div
         ref={mapContainer}
         css={css`
-          height: 300px;
+          height: 400px;
         `}
       />
       <Box>
