@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useEffect, useState } from 'react';
+import { Route } from 'wouter';
 import {
   ChakraProvider,
   extendTheme,
@@ -97,7 +98,19 @@ function App() {
       <Stack spacing={4} direction="row" align="center">
         <CreateInviteButton />
         <RedeemCodeButton />
-        <PeopleDrawer contacts={contacts} latestMessages={latestMessages} />
+        <Route path="/contact/:cid">
+          {(params) => (
+            <PeopleDrawer
+              contacts={contacts}
+              latestMessages={latestMessages}
+              contactId={params.cid}
+              initialOpen
+            />
+          )}
+        </Route>
+        <Route path="/">
+          <PeopleDrawer contacts={contacts} latestMessages={latestMessages} />
+        </Route>
       </Stack>
     </ChakraProvider>
   );

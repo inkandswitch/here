@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation } from 'wouter';
 import {
   useDisclosure,
   Drawer,
@@ -9,12 +10,14 @@ import {
   DrawerHeader,
   DrawerBody,
   DrawerFooter,
-  Link,
+  Link as A,
   UnorderedList,
   ListItem,
-  Box,
+  Heading,
+  Stack,
+  Text,
 } from '@chakra-ui/react';
-import { IContact } from '../../backend/types';
+import { ContactId, IContact } from '../../backend/types';
 import Backchannel from '../../backend';
 import Nickname from './Nickname';
 
@@ -23,11 +26,28 @@ const backchannel = Backchannel();
 type Props = {
   contacts: Array<IContact>;
   latestMessages: {};
+  contactId?: ContactId;
+  initialOpen?: boolean;
 };
 
-export default function PeopleDrawer({ contacts, latestMessages }: Props) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+export default function PeopleDrawer({
+  contactId,
+  contacts,
+  latestMessages,
+  initialOpen = false,
+}: Props) {
+  const { isOpen, onOpen, onClose } = useDisclosure({
+    defaultIsOpen: initialOpen,
+  });
+  const [contact, setContact] = useState<IContact>();
+  let [, setLocation] = useLocation();
   const btnRef = React.useRef();
+
+  useEffect(() => {
+    if (contactId && contactId !== contact?.id) {
+      setContact(backchannel.db.getContactById(contactId));
+    }
+  }, [contactId, contact]);
 
   function handleResetClick(e) {
     e.preventDefault();
@@ -43,6 +63,19 @@ export default function PeopleDrawer({ contacts, latestMessages }: Props) {
     }
   }
 
+  async function handleContactDelete(e) {
+    e.preventDefault();
+    if (window.confirm('Permanently delete this contact?')) {
+      await backchannel.deleteContact(contact.id);
+      setLocation(`/`);
+    }
+  }
+
+  function handleClose() {
+    setLocation('/');
+    onClose();
+  }
+
   return (
     <>
       <Button ref={btnRef} onClick={onOpen}>
@@ -51,7 +84,7 @@ export default function PeopleDrawer({ contacts, latestMessages }: Props) {
       <Drawer
         isOpen={isOpen}
         placement="right"
-        onClose={onClose}
+        onClose={handleClose}
         finalFocusRef={btnRef}
       >
         <DrawerOverlay />
@@ -59,37 +92,60 @@ export default function PeopleDrawer({ contacts, latestMessages }: Props) {
           <DrawerCloseButton />
           <DrawerHeader>Here.</DrawerHeader>
           <DrawerBody>
-            <Box>
-              {contacts.length === 0 && 'No contacts. Where are your peeps at?'}
-              <UnorderedList>
-                {contacts.map((contact) => {
-                  let latestMessage, latestMessageTime;
-                  if (latestMessages && latestMessages[contact.id]) {
-                    latestMessage = latestMessages[contact.id];
-                    latestMessageTime = timestampToDate(
-                      latestMessage.timestamp
-                    );
-                  }
+            {contact ? (
+              <Stack spacing={4}>
+                <Heading as="h5">
+                  <Nickname contact={contact} />
+                </Heading>
+                <Text>❌ Can see your location</Text>
+                <Text>❌ Sharing their location with you</Text>
+              </Stack>
+            ) : (
+              <>
+                {contacts.length === 0 &&
+                  'No contacts. Where are your peeps at?'}
+                <UnorderedList>
+                  {contacts.map((contact) => {
+                    let latestMessage, latestMessageTime;
+                    if (latestMessages && latestMessages[contact.id]) {
+                      latestMessage = latestMessages[contact.id];
+                      latestMessageTime = timestampToDate(
+                        latestMessage.timestamp
+                      );
+                    }
 
-                  return (
-                    <Link key={contact.id}>
-                      <ListItem>
-                        <Nickname contact={contact} /> {latestMessageTime}
+                    return (
+                      <ListItem key={contact.id}>
+                        <Link href={`/contact/${contact.id}`}>
+                          <A>
+                            <Nickname contact={contact} /> {latestMessageTime}
+                          </A>
+                        </Link>
                       </ListItem>
-                    </Link>
-                  );
-                })}
-              </UnorderedList>
-            </Box>
+                    );
+                  })}
+                </UnorderedList>
+              </>
+            )}
           </DrawerBody>
           <DrawerFooter>
-            <Button
-              variant="outline"
-              colorScheme="red"
-              onClick={handleResetClick}
-            >
-              Delete all data
-            </Button>
+            {contact ? (
+              <Button
+                variant="outline"
+                colorScheme="red"
+                onClick={handleContactDelete}
+              >
+                Delete Contact
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                colorScheme="red"
+                onClick={handleResetClick}
+              >
+                Delete all data
+              </Button>
+            )}
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
