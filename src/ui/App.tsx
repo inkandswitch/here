@@ -17,7 +17,6 @@ import PeopleDrawer from './components/PeopleDrawer';
 import Map from './components/Map';
 import CreateInviteButton from './components/CreateInviteButton';
 import RedeemCodeButton from './components/RedeemCodeButton';
-import MapAndViews from './components/MapAndViews';
 
 const backchannel = Backchannel();
 
