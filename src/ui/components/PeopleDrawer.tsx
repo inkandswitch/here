@@ -115,8 +115,8 @@ export default function PeopleDrawer({
                     }
 
                     return (
-                      <ListItem>
-                        <Link key={contact.id} href={`/contact/${contact.id}`}>
+                      <ListItem key={contact.id}>
+                        <Link href={`/contact/${contact.id}`}>
                           <A>
                             <Nickname contact={contact} /> {latestMessageTime}
                           </A>
