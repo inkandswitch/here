@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React, { useEffect, useState, useCallback } from 'react';
-import useCode, { CodeType } from '../hooks/useCode';
-import { Key, ContactId } from '../../backend/types';
+import useCode  from '../hooks/useCode';
+import { Key, ContactId } from 'backchannel';
 import Backchannel from '../../backend';
 import {
   Text,
@@ -23,7 +23,7 @@ const CODE_REGENERATE_TIMER_SEC = 120;
 
 export default function CreateInviteButton() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const code = useCode(CodeType.NUMBERS, CODE_REGENERATE_TIMER_SEC);
+  const code = useCode(CODE_REGENERATE_TIMER_SEC);
   const [contactId, setContactId] = useState('');
 
   const [errorMsg, setErrorMsg] = useState('');
@@ -36,8 +36,11 @@ export default function CreateInviteButton() {
     };
 
     try {
+      let nameplate = 'here+' + code.slice(0,2)
+      let password = code.slice(2)
       const key: Key = await backchannel.accept(
-        code,
+        nameplate,
+        password,
         (CODE_REGENERATE_TIMER_SEC + 2) * 1000 // be permissive, give extra time to redeem after timeout ends
       );
 

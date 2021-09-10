@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useCallback } from 'react';
 
-import { Key, ContactId } from '../../backend/types';
+import { Key, ContactId } from 'backchannel';
 import {
   Text,
   Modal,
@@ -36,7 +36,9 @@ export default function RedeemCodeButton() {
     };
 
     try {
-      const key: Key = await backchannel.accept(code);
+      let nameplate = 'here+' + code.slice(0,2)
+      let password = code.slice(2)
+      const key: Key = await backchannel.accept(nameplate, password);
 
       const cid: ContactId = await backchannel.addContact(key);
       setErrorMsg('');

@@ -17,7 +17,7 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
-import { ContactId, IContact } from '../../backend/types';
+import { ContactId, IContact } from 'backchannel';
 import Backchannel from '../../backend';
 import Nickname from './Nickname';
 
