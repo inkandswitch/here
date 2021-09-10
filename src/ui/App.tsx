@@ -8,10 +8,9 @@ import {
   Stack,
 } from '@chakra-ui/react';
 
-import Backchannel, { EVENTS } from '../backend';
-import { IMessage } from '../backend/types';
+import Backchannel from '../backend';
 import Automerge from 'automerge';
-import { Mailbox } from '../backend/backchannel';
+import { Mailbox, IMessage, EVENTS } from 'backchannel';
 
 import PeopleDrawer from './components/PeopleDrawer';
 import Map from './components/Map';
@@ -31,7 +30,7 @@ function App() {
       setContacts(contacts);
 
       contacts.forEach(async (contact) => {
-        let messages = backchannel.getMessagesByContactId(contact.id);
+        let messages = await backchannel.getMessagesByContactId(contact.id);
 
         if (!messages) {
           const doc = (await backchannel._addContactDocument(

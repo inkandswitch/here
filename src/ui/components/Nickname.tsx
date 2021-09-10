@@ -1,11 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react';
 import { css } from '@emotion/react';
-import { IContact } from '../../backend/types';
+import { IContact } from 'backchannel';
 
 export default function Nickname({ contact }: { contact: IContact }) {
-  if (contact.moniker) {
-    return <>{contact.moniker}</>;
+  if (contact.name) {
+    return <>{contact.name}</>;
   }
 
   // No nickname was ever assigned, show placeholder

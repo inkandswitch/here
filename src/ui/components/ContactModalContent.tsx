@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState } from 'react';
-import { ContactId } from '../../backend/types';
+import { ContactId } from 'backchannel';
 import {
   Text,
   ModalHeader,
@@ -35,8 +35,7 @@ export default function ContactModalContent({ contactId, closeModal }: Props) {
     e.preventDefault();
     setErrorMsg('');
     try {
-      // Set the moniker
-      await backchannel.editMoniker(contactId, nickname);
+      await backchannel.editName(contactId, nickname);
       closeModal();
     } catch (err) {
       console.error(err);
