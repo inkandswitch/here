@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { Code } from 'backchannel';
+import { Code } from '@inkandswitch/backchannel';
 
 import useCountdown from '../hooks/useCountdown';
 import { randomBytes } from 'crypto';

@@ -1,6 +1,6 @@
-import { Backchannel, BackchannelSettings } from 'backchannel';
+import { Backchannel, BackchannelSettings } from '@inkandswitch/backchannel';
 import defaultConfig from './config';
-export { ERROR, EVENTS } from 'backchannel';
+export { ERROR, EVENTS } from '@inkandswitch/backchannel';
 
 let instance = null;
 

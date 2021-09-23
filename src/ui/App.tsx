@@ -10,7 +10,7 @@ import {
 
 import Backchannel from '../backend';
 import Automerge from 'automerge';
-import { Mailbox, IMessage, EVENTS } from 'backchannel';
+import { Mailbox, IMessage, EVENTS } from '@inkandswitch/backchannel';
 
 import PeopleDrawer from './components/PeopleDrawer';
 import Map from './components/Map';

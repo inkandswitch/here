@@ -2,7 +2,7 @@
 import React from 'react';
 import { Stack } from '@chakra-ui/react';
 
-import { ContactId, IContact } from 'backchannel';
+import { ContactId, IContact } from '@inkandswitch/backchannel';
 
 import PeopleDrawer from './PeopleDrawer';
 import Map from './Map';

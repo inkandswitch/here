@@ -6,6 +6,7 @@
     "@chakra-ui/react": "^1.6.5",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
+    "@inkandswitch/backchannel": "^1.0.1",
     "@localfirst/relay-client": "^3.5.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",

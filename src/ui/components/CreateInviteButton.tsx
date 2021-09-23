@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React, { useEffect, useState, useCallback } from 'react';
 import useCode  from '../hooks/useCode';
-import { Key, ContactId } from 'backchannel';
+import { Key, ContactId } from '@inkandswitch/backchannel';
 import Backchannel from '../../backend';
 import {
   Text,

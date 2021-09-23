@@ -2,7 +2,7 @@
 
 THIS IS AN UNSUPPORTED RESEARCH PROTOTYPE.
 
-A local-first, identity-less location sharing app riffing off of backchannel libraries.
+A location sharing app example that uses [Backchannel](https://github.com/inkandswitch/backchannel).
 
 ## Running locally
 

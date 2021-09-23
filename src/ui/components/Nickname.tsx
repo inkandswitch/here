@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react';
 import { css } from '@emotion/react';
-import { IContact } from 'backchannel';
+import { IContact } from '@inkandswitch/backchannel';
 
 export default function Nickname({ contact }: { contact: IContact }) {
   if (contact.name) {

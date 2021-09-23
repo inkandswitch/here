@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState } from 'react';
-import { ContactId } from 'backchannel';
+import { ContactId } from '@inkandswitch/backchannel';
 import {
   Text,
   ModalHeader,
